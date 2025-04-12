@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вадим Дмитриенко — 3D визуализатор интерьеров</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0e0e0e;
+      color: #f5f5f5;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    header {
+      position: relative;
+      text-align: center;
+      padding: 0;
+      overflow: hidden;
+    }
+    .hero {
+      position: relative;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .hero img.bg-photo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0.5;
+    }
+    .hero canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-content h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .hero-content p {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #f5f5f5;
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 30px;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #ddd;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+    nav a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: 600;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #f5f5f5;
+      transition: width 0.3s ease;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    section {
+      padding: 80px 0;
+    }
+    h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    ul.skills, ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul.skills li, ul li {
+      margin-bottom: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .grid img {
+      width: 100%;
+      border-radius: 12px;
+    }
+    form input, form textarea {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    form button {
+      padding: 10px 20px;
+      border: none;
+      background: #f5f5f5;
+      color: #000;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      background: #000;
+    }
+
+		@media (max-width: 1024px) {
+			.hero-content h1 {
+				font-size: 36px;
+			}
+		
+			.hero-content p {
+				font-size: 18px;
+			}
+		
+			nav {
+				flex-wrap: wrap;
+				gap: 15px;
+				padding: 10px 15px;
+			}
+		
+			.container {
+				padding: 30px 15px;
+			}
+		
+			.grid {
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 15px;
+			}
+		}
+		
+		@media (max-width: 768px) {
+			.hero-content h1 {
+				font-size: 28px;
+			}
+		
+			.hero-content p {
+				font-size: 16px;
+			}
+		
+			.btn {
+				padding: 10px 20px;
+				font-size: 14px;
+			}
+		
+			nav {
+				flex-direction: column;
+				align-items: center;
+				gap: 10px;
+			}
+		
+			.hero img.bg-photo {
+				width: 100%;
+			}
+		}
+		
+		@media (max-width: 480px) {
+			.hero-content h1 {
+				font-size: 22px;
+			}
+		
+			.hero-content p {
+				font-size: 14px;
+			}
+		
+			.btn {
+				padding: 8px 16px;
+				font-size: 13px;
+			}
+		
+			h2 {
+				font-size: 24px;
+			}
+		
+			.container {
+				padding: 20px 10px;
+			}
+		
+			footer {
+				font-size: 14px;
+			}
+		}
+		
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#about">Обо мне/About me</a>
+    <a href="#skills">Навыки/Skills</a>
+    <a href="#portfolio">Портфолио/Portfolio</a>
+    <a href="#services">Услуги/Services</a>
+    <a href="#contact">Контакты/Contacts</a>
+  </nav>
+  <header>
+    <div class="hero">
+      <img src="img/photo_2025-04-12_11-40-08.jpg" alt="Фото Вадима" class="bg-photo">
+
+      <canvas id="bg-animation"></canvas>
+      <div class="hero-content">
+        <h1>Вадим Дмитриенко/Vadym Dmytriienko</h1>
+        <p>3D визуализатор интерьеров и экстерьеров/3D interior and exterior artist</p>
+        <a href="#portfolio" class="btn">Моё портфолио</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="container">
+      <h2>Обо мне/About me</h2>
+      <p>Привет! Меня зовут Вадим — я 3D-визуализатор с более чем 3-летним опытом, превращающий архитектурные идеи в фотореалистичные визуальные истории.
+
+				Каждый проект для меня — это не просто картинка, а эмоция, атмосфера и продуманный акцент на деталях. Я помогаю дизайнерам, архитекторам и девелоперам не просто показать объект, а влюбить в него с первого взгляда.
+				Работаю в связке с 3ds Max, Corona Renderer и Photoshop — мои инструменты позволяют создавать визуализации, которые продают, убеждают и вдохновляют.
+				
+				Если вы ищете профессионала, который умеет говорить на языке света, формы и пространства — давайте обсудим ваш проект.
+			
+				<h2></h2>
+			
+				Hi! My name is Vadim — I’m a 3D visualizer with over 3 years of experience, turning architectural ideas into photorealistic visual stories.
+
+				For me, each project is not just an image, but an emotion, an atmosphere, and a carefully thought-out emphasis on details. I help designers, architects, and developers not only showcase their objects but make people fall in love with them at first sight.
+				
+				I work with 3ds Max, Corona Renderer, and Photoshop — my tools allow me to create visualizations that sell, persuade, and inspire.
+				
+				If you’re looking for a professional who speaks the language of light, form, and space — let’s discuss your project.</p>
+    </div>
+		
+  </section>
+
+  <section id="skills">
+    <div class="container">
+      <h2>Навыки/Skills</h2>
+      <ul class="skills">
+        <li>3ds Max 2025</li>
+        <li>Corona Renderer 12</li>
+        <li>Photoshop</li>
+				<li>UE 5</li>
+				<li>Ai Agent</li>
+				<li>Autocad</li>
+				<li>Forest Pack</li>
+				<h2>Навыки/Skills (Upgrade/Повышение)</h2>
+        <li>Revit</li>
+				<li>ZBrush</li>
+
+      </ul>
+    </div>
+  </section>
+
+  <section id="portfolio">
+    <div class="container">
+      <h2>Портфолио</h2>
+      <div class="grid">
+        <img src="img/e.jpg" alt="Проект 1">
+        <img src="img/photo_2025-04-10_14-56-16.jpg" alt="Проект 2">
+        <img src="img/w.jpg" alt="Проект 3">
+				<img src="img/photo_2025-04-10_15-00-39.jpg" alt="Проект 4">
+				<img src="img/photo_2025-04-10_14-55-40.jpg" alt="Проект 5">
+				<img src="img/photo_2025-04-10_14-59-10.jpg" alt="Проект 6">
+				<img src="img/i.jpg" alt="Проект 3">
+				<img src="img/o.jpg" alt="Проект 3">
+				<img src="img/p.jpg" alt="Проект 3">
+				<img src="img/r.jpg" alt="Проект 3">
+				<img src="img/t.jpg" alt="Проект 3">
+				<img src="img/u.jpg" alt="Проект 3">
+				<img src="img/y.jpg" alt="Проект 3">
+				<img src="img/a.jpg" alt="Проект 3">
+				<img src="img/s.jpg" alt="Проект 3">
+				<img src="img/d.jpg" alt="Проект 3">
+				<img src="img/f.jpg" alt="Проект 3">
+				<img src="img/g.jpg" alt="Проект 3">
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="container">
+      <h2>Услуги/Services</h2>
+      <ul>
+        <li>Фотореалистичная 3D-визуализация / Photorealistic 3D visualization</li>
+        <li>Анимация интерьера / Interior animation</li>
+        <li>Предварительные ракурсы для согласования / Preliminary views for approval</li>
+        <li>Постобработка и цветокоррекция / Post-processing and color correction</li>
+				<li>Полетный тур, панорамы / Flythrough tour, panoramas</li>
+				<li>Геймификация интерьера в UE5 / Interior gamification in UE5</li>
+				<li>Вариативный показ в UE5 / Variative display in UE5</li>
+
+      </ul>
+    </div>
+  </section>
+
+  
+
+  <section id="contact">
+    <div class="container">
+      <h2>Связаться со мной/Conatcts</h2>
+     
+      <p>Телеграм  <a href="https://t.me/ErikDorn888" style="color: #f5f5f5; text-decoration: underline;">Telegram</a></p>
+			<p>Телефон  <a href="+79625499925" style="color: #f5f5f5; text-decoration: underline;">+79625499925</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Вадим 3ds / </p>
+    </div>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('bg-animation');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const shapes = Array.from({ length: 60 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      dx: (Math.random() - 0.5) * 1.5,
+      dy: (Math.random() - 0.5) * 1.5,
+      size: 2 + Math.random() * 3
+    }));
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      shapes.forEach(s => {
+        s.x += s.dx;
+        s.y += s.dy;
+        if (s.x < 0 || s.x > width) s.dx *= -1;
+        if (s.y < 0 || s.y > height) s.dy *= -1;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
